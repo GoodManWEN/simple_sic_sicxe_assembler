@@ -1,0 +1,290 @@
+                      INSTALLING THE SIC SIMULATOR 
+ 
+ 
+    The SIC simulator is written in standard Pascal. It should
+    be possible to install this simulator on almost any computer with 
+    a Pascal compiler, by making the minor changes described below. 
+ 
+ 
+ MAIN MEMORY SIZE 
+ 
+    The largest address in the simulated memory is hexadecimal 2FFF 
+    (decimal 12287). This memory size can be changed by changing the 
+    value of the constant msize (line 34). 
+ 
+ 
+ SIC FEATURES 
+ 
+    This version of the simulator supports most SIC/XE instructions and 
+    features (see the user documentation for details). For a simulator 
+    that supports only standard SIC features, set the constant xe (line 35)
+    to false.
+ 
+ 
+ CHARACTER CODES
+ 
+    The simulated SIC machine uses ASCII character codes. In order to 
+    perform I/O operations, the simulator must translate between ASCII 
+    and the character codes being used by the host machine. The
+    information needed to do this translation is supplied in the arrays
+    intab and outtab; initialization statements for the values in 
+    these arrays begin at line 1746. 
+ 
+    If the host machine uses ASCII character codes, the only 
+    initialization needed is the statement
+ 
+               for i := 0 to 255 do 
+                  intab[i] := i;
+ 
+    If the host machine uses a different set of character codes, 
+    initialization is performed with a series of statements of the 
+    form
+ 
+               intab[h] := a;
+ 
+    where 'h' is the ordinal value for some character on the host
+    computer, and 'a' is the ordinal value for the same character in 
+    the ASCII character set. Following this sequence should be the
+    statement
+ 
+               for i := 0 to 255 do
+                  outtab[i] := c;
+ 
+    where 'c' is the ordinal value for a period on the host machine.
+    (This causes ASCII characters which are not available in the 
+    character set of the host machine to be translated as '.').
+ 
+ 
+ 
+ INPUT AND OUTPUT 
+ 
+    All of the assign statements are located in the procedure 
+    initialize (lines 1734-1741). These statements may need to be 
+    changed (or removed) if your system uses some other means for 
+    associating internal and external file names.  Similarly, the
+    close statements (lines 831, 1855-1860) may need to be changed
+    or removed.
+ 
+    Standard Pascal I/O procedures for text files do not provide
+    satisfactory support for interactive input. The basic problem is
+    that an automatic reset operation is performed on file input when 
+    the program begins execution. This reset may attempt to read the
+    first line from input, which causes the program to ask the user
+    for input before the first prompt message has been written out.
+ 
+    Most compilers make some special provision for interactive
+    files; however, the details vary from one system to another.
+    If commands and responses seem out of order, you may need to seek 
+    assistance from someone who is familiar with interactive input 
+    on your system. Fortunately, this is a common problem, so the
+    solution should not be difficult to locate. The only readln for
+    file input is contained in the procedure readl. This procedure 
+    is called by the main program (line 1837). All reading of data 
+    from input is done by procedure readc, which reads a single
+    character for each call. 
+ 
+ 
+ ______________________________________________________________________ 
+ 
+ 
+                        HOW TO USE THE SIC SIMULATOR 
+ 
+ 
+ 
+ 
+    After initializing, the simulator will display
+ 
+               SIC SIMULATOR V1.6
+               COMMAND: S(tart, R(un, E(nter, D(ump, H(count, B(kpt, Q(uit ?
+ 
+    You may now enter any of the commands described below; each 
+    command may be abbreviated by entering only its first letter. 
+    Commands and other alphabetic characters (such as hexadecimal
+    digits) may be entered using either lowercase or uppercase letters. 
+
+    START
+ 
+       Entering S causes the simulator to read 128 bytes of data from
+       device 00 into memory, starting at address 0000. This command 
+       would normally be used to bootstrap a loader or other program
+       into memory. See the description of I/O device conventions
+       below for further information.
+ 
+ 
+    RUN
+ 
+       This command causes the simulator to begin executing SIC
+       machine language instructions from a program in memory. There 
+       are two forms of the command: 
+ 
+               R 
+               R address 
+ 
+       If an address is specified in the command, the next instruction
+       to be executed is the one starting at that address. (All
+       addresses specified in commands are given in hexadecimal.) If
+       no address is specified, the next instruction to be executed is 
+       the one following the last previously-executed instruction, if 
+       any, or the instruction beginning at address 0000. 
+ 
+       Execution continues until an error occurs, or the number of 
+       instructions specified by HCOUNT have been executed, or a 
+       breakpoint specified by BKPT is reached (see below).
+ 
+ 
+    ENTER
+ 
+       This command is used to enter values into registers or memory 
+       locations. The two possible forms of the command are 
+ 
+               E Rn xxxxxx
+               E address xxxx...
+ 
+       In the first case, Rn is a register identifier (RA, RX, RL,
+       etc.). Data to be entered into the register is given in
+       hexadecimal notation, with two hexadecimal digits specifying 
+       each byte of data. When entering data into a register, exactly
+       three bytes (6 hex digits) must be given. 
+ 
+       In the second case, any number of bytes of data may be entered
+       into memory, starting at the address specified. Each byte of 
+       data to be entered is specified with two hexadecimal digits, as 
+       above. 
+ 
+ 
+ 
+    DUMP 
+ 
+       This command is used to display the contents of registers and 
+       memory locations. There are three possible forms of the 
+       command:
+ 
+               D R
+               D startaddr-endaddr
+               D R,startaddr-endaddr
+ 
+       If R is specified, the contents of all registers are displayed 
+       in hexadecimal, along with the current value of the condition
+       code. If startaddr and endaddr are specified, the contents of 
+       the indicated range of addresses are displayed; a maximum of
+       320 (decimal) bytes can be dumped at one time. Because memory
+       is displayed in rows of 16 bytes each, the actual dump may
+       include some bytes before startaddr and some bytes after
+       endaddr. 
+ 
+ 
+    HCOUNT 
+ 
+       This command is used to specify the maximum number of SIC
+       instructions to be executed in response to a RUN command. This
+       limit allows the user to regain control in case of an unending 
+       loop in the program being simulated. The command has the form 
+ 
+               H n 
+ 
+       where n is a value given by 1 to 4 decimal digits. The 
+       maximum value that can be specified is 9999; if no HCOUNT 
+       command is entered, the default value is 1000. 
+ 
+       After n instructions have been executed, the simulator displays
+ 
+               n INSTRUCTIONS EXECUTED
+               P=xxxxxx
+ 
+       where xxxxxx is the current program counter value (i.e., the 
+       address of the next instruction to be executed). Entering
+       RUN as the next command will resume execution at this point 
+       (for another n instructions).
+ 
+ 
+    BKPT 
+ 
+       This command is used to set a breakpoint to control instruction 
+       execution. The form of the command is 
+ 
+               B address 
+ 
+       When the next instruction to be executed begins at the
+       specified address, the simulator displays 
+ 
+               BREAKPOINT REACHED
+               P=xxxxxx
+ 
+       where xxxxxx is the current location counter value (i.e., the 
+       breakpoint address). Entering RUN as the next command will 
+       resume execution at this point. 
+ 
+ 
+    QUIT 
+ 
+       This command is used to terminate the simulation. 
+ 
+ 
+    I/O DEVICE CONVENTIONS 
+ 
+ 
+       Device 00 (file name DEV00) is used only by the START command; 
+       it contains 128 bytes of bootstrap data, represented with two 
+       hexadecimal digits (characters 0-9 and A-F) per byte. For ease
+       of creation and editing, this file is represented as a text 
+       file with four lines of data; each line contains 64 characters 
+       (which represent 32 bytes of data).
+ 
+       The simulator currently supports six simulated SIC devices for
+       use by the program: devices F1, F2, and F3 (file names DEVF1,
+       DEVF2, and DEVF3), which can be used only for input, and
+       devices 04, 05, and 06 (file names DEV04, DEV05, and DEV06),
+       which can be used only for output. On any of these files, 
+       each byte of data is represented as one character. The files 
+       may contain any character which is part of the character set of 
+       the host machine; translation between the host machine's 
+       character set and ASCII is handled by the simulator. On input, 
+       an end-of-line is read as hexadecimal 00; an end-of-file is
+       read as hexadecimal 04. On output, writing a hexadecimal 00 
+       causes an end-of-line to be inserted.
+ 
+       Device timing delays are simulated via the TD instruction.
+       Except for the first time the device is addressed, a TD issued 
+       to a device will return the "device busy" indication from 1 to
+       4 times before signalling "device ready". An attempt to
+       execute an RD or WD instruction before the device is ready will 
+       cause an error message.
+ 
+ 
+ 
+    NOTES
+ 
+       1. The largest main memory address is 2FFF. When the simulator
+          is initialized, all registers are set to FFFFFF and all 
+          memory locations are set to FF. 
+ 
+ 
+       2. The file LOG contains a listing of all terminal input and 
+          output for the simulation run. This file may be printed 
+          to obtain a hard-copy record of the simulation.
+ 
+ 
+       3. When the simulator detects a run-time error (for example, 
+          illegal machine instruction, address out of range, or
+          arithmetic overflow) it displays an error message and the
+          current program counter value. This value will be either
+          the address of the instruction that caused the error, or 
+          the address of the next instruction following it (depending
+          upon the type of error detected).
+ 
+   LIMITATIONS 
+ 
+      This version of the SIC simulator supports all SIC/XE instructions
+      and features except for the following:
+ 
+        1. Floating-point data type and instructions (ADDF, COMPF, DIVF,
+           FIX, FLOAT, LDF, MULF, NORM, STF, SUBF) 
+ 
+        2. I/O channels and associated instructions (SIO, TIO, HIO) 
+ 
+        3. Interrupts and associated instructions (LPS, STI, SVC)
+ 
+        4. Register SW and associated features (user/supervisor modes,
+           running/idle states) 
+ 
+        5. Memory protection and associated instructions (SSK) 

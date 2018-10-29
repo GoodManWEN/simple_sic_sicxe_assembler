@@ -1,0 +1,46 @@
+.
+. read a number: a
+. output the number:  a * 2013 / 73
+.
+test     start   1000 
+         jsub    rdnum
+.
+         lda     buffer
+          mul    k2013
+          div    k73
+         sta     buffer
+.
+         jsub    wrnum
+         byte    x'FF'
+.
+ k2013   word    2013
+   k73   word    73
+  zero   word    0
+buffer   resw    1      
+buflen   word    3
+. 
+.       subroutine to read an integer to buffer
+. 
+rdnum    ldx     zero
+rloop    td      input
+          jeq    rloop
+          rd     input  
+          stch   buffer,x 
+          tix    buflen 
+         jlt     rloop 
+         rsub         
+input    byte    x'F3'
+. 
+.       subroutine to write an integer from buffer
+. 
+wrnum    ldx     zero
+wloop    td      output
+         jeq     wloop
+         ldch    buffer,x 
+         wd      output  
+         tix     buflen 
+         jlt     wloop 
+         rsub         
+output   byte    x'06'
+.
+         end     test

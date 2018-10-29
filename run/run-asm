@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if [ $# -ne 1 ]; then  echo "$0 source"; exit 1; fi
+if [ ! -f $1  ]; then  echo "$1 does not exist"; exit 1; fi
+
+prefix=`basename $1 .asm`
+
+rm -f SRCFILE
+cp $1 SRCFILE
+./asm 
+mv OBJFILE $prefix.obj
+mv LISFILE $prefix.lst
+mv INTFILE $prefix.int
+rm -f SRCFILE

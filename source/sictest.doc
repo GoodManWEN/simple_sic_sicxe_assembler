@@ -1,0 +1,139 @@
+                       SIC SOFTWARE TEST RUN 
+ 
+ 
+    The following procedure assembles, loads, and executes a simple SIC
+    program using the SIC simulator. This is not an exhaustive test of
+    the SIC software supplied in this archive. However, successfully
+    completing this procedure should provide reasonable assurance that
+    everything has been installed properly. (This procedure can be modified, 
+    as described below, to test only the simulator, bootstrap, and loader
+    in case you prefer not to install the assembler.) 
+ 
+    The SIC program that is assembled and executed during this procedure 
+    copies a file from device F3 to device 06. This program is a
+    modification of the one that appears in Fig. 2.5 of "System Software."
+    The main difference is that this version writes end-of-line
+    indications as part of its output (by considering the end-of-line
+    as a part of the record).
+ 
+       1. Install the SIC simulator and (if desired) the SIC assembler.
+ 
+       2. If you do NOT wish to install the SIC assembler, place the
+          contents of SICTEST.OBJ into a file named DEVF2 and go to 
+          step 5 below. 
+ 
+       3. Copy the contents of SICTEST.ASM into a file named SRCFILE 
+          and execute the SIC assembler. 
+ 
+       4. Copy the contents of OBJFILE into a file named DEVF2. (This
+          object program should be the same as the one found in 
+          SICTEST.OBJ).
+ 
+       5. Copy the contents of SICBOOT.OBJ into a file named DEV00.
+ 
+       6. Copy the contents of SICLDR.OBJ into a file named DEVF1. 
+ 
+       7. Copy the contents of SICTEST.DAT into a file named DEVF3.
+ 
+       8. Execute the SIC simulator, entering commands as shown in the 
+          simulation log below.
+ 
+       9. Examine the contents of file DEV06. This file should contain 
+          the following seven lines:
+ 
+                   TEST LINE 1 
+                   TEST LINE 2 
+                   3 
+                   4 
+                   5 
+                   END OF TEST FILE
+                   EOF 
+ 
+ 
+    The following listing shows all of the input and output messages that 
+    should occur during the simulator run:
+ 
+
+    SIC SIMULATOR V1.6 
+ 
+    COMMAND: S(tart, R(un, E(nter, D(ump, H(count, B(kpt, Q(uit? 
+    D R,0-8F 
+    A=FFFFFF  X=FFFFFF  L=FFFFFF  B=FFFFFF
+    S=FFFFFF  T=FFFFFF  P=000000  CC=LT 
+ 
+    0000 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF 
+    0010 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF 
+    0020 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF 
+    0030 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF 
+    0040 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF 
+    0050 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF 
+    0060 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF 
+    0070 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF 
+    0080 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF 
+ 
+    COMMAND: S(tart, R(un, E(nter, D(ump, H(count, B(kpt, Q(uit? 
+    S
+ 
+    COMMAND: S(tart, R(un, E(nter, D(ump, H(count, B(kpt, Q(uit? 
+    D R,0-8F 
+    A=FFFFFF  X=FFFFFF  L=FFFFFF  B=FFFFFF
+    S=FFFFFF  T=FFFFFF  P=000000  CC=LT 
+ 
+    0000 00004B04 00484800 1E200054 0C005848 
+    0010 001E1800 58548000 2C004B3C 0006E000 
+    0020 5730001E D8005728 00423000 80280045 
+    0030 38001E1C 00452800 5138003F 1C004E4C 
+    0040 00000000 04000030 00008000 00000000 
+    0050 0700000A 000010F1 00000000 00000000 
+    0060 00000000 00000000 00000000 00000000 
+    0070 00000000 00000000 00000000 00000000 
+    0080 FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF 
+ 
+    COMMAND: S(tart, R(un, E(nter, D(ump, H(count, B(kpt, Q(uit? 
+    B 1027 
+ 
+    COMMAND: S(tart, R(un, E(nter, D(ump, H(count, B(kpt, Q(uit? 
+    H 5000 
+ 
+    COMMAND: S(tart, R(un, E(nter, D(ump, H(count, B(kpt, Q(uit? 
+    R
+      5000 INSTRUCTIONS EXECUTED 
+    P=000030 
+ 
+    COMMAND: S(tart, R(un, E(nter, D(ump, H(count, B(kpt, Q(uit? 
+    R
+      5000 INSTRUCTIONS EXECUTED 
+    P=00001B 
+ 
+    COMMAND: S(tart, R(un, E(nter, D(ump, H(count, B(kpt, Q(uit? 
+    R
+      5000 INSTRUCTIONS EXECUTED 
+    P=000115 
+ 
+    COMMAND: S(tart, R(un, E(nter, D(ump, H(count, B(kpt, Q(uit? 
+    R
+      5000 INSTRUCTIONS EXECUTED 
+    P=002079 
+ 
+    COMMAND: S(tart, R(un, E(nter, D(ump, H(count, B(kpt, Q(uit? 
+    R
+    BREAKPOINT REACHED 
+    P=001027 
+ 
+    COMMAND: S(tart, R(un, E(nter, D(ump, H(count, B(kpt, Q(uit? 
+    D R,0-8F 
+    A=000046  X=000003  L=0000DF  B=FFFFFF
+    S=FFFFFF  T=FFFFFF  P=001027  CC=EQ 
+ 
+    0000 00004B04 00484800 1E200054 0C005848 
+    0010 001E1800 58548000 2C004B3C 0006E000 
+    0020 5730001E D8005728 00423000 80280045 
+    0030 38001E1C 00452800 5138003F 1C004E4C 
+    0040 00000000 04000030 00008000 00000000 
+    0050 0700000A 000010F1 0000F000 00000000 
+    0060 00000000 00000000 00000000 00000000 
+    0070 00000000 00000000 00000000 00000000 
+    0080 48010C28 01623000 8AFF4801 4D48010C 
+ 
+    COMMAND: S(tart, R(un, E(nter, D(ump, H(count, B(kpt, Q(uit? 
+    Q

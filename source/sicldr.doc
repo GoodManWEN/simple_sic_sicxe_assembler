@@ -1,0 +1,38 @@
+                         INSTALLING THE SIC LOADER 
+ 
+ 
+    The only installation required is to place the object code for the 
+    loader (from file SICLDR.OBJ) into the file DEVF1 for use by the 
+    simulator. The source code for the loader (SICLDR.ASM) is included in
+    case you wish to make modifications to the loader.
+ 
+    To modify the loader, make the desired changes and assemble the 
+    source code. The resulting object program must then be edited so
+    that it is in the proper form to be loaded by the bootstrap.
+    To do this, remove the Header and End records, and the first 9 
+    characters of each Text record (the 'T', address, and length). 
+ 
+    In making modifications to the loader, note that the object code 
+    must occupy contiguous memory locations, beginning at address 80. 
+    Thus, any statements which do not generate object code (such as
+    RESB and RESW) must appear at the end of the loader. 
+ 
+ 
+ ---------------------------------------------------------------------------- 
+ 
+ 
+                         HOW TO USE THE SIC LOADER 
+ 
+ 
+    This is an absolute loader that loads object programs in the format 
+    that is described in Section 2.1 of "System Software." The object
+    program is read from file DEVF2. After the program is loaded, the 
+    loader jumps to the indicated starting address to begin execution. 
+ 
+    To run the loader, place the object program to be loaded in file 
+    DEVF2, the object code for the loader in file DEVF1, and the
+    object code for the SIC bootstrap in file DEV00. Then run the 
+    SIC simulator and execute the S(tart command. 
+ 
+    Errors in the object program being loaded will result in an error 
+    halt by the loader (on an illegal instruction trap).

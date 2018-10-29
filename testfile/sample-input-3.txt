@@ -1,0 +1,44 @@
+try      start   4000
+         ldx     zero
+         stx     tp
+         lda     k73
+         sta     seed
+.
+again    lda     seed
+         mul     k129
+         sta     seed
+.
+         div     k511
+         mul     k511
+         sta     tmp
+.
+         lda     seed
+         sub     tmp
+         sta     seed
+.
+         ldx     tp
+         sta     table,x
+.
+         lda     tp
+         add     three
+         sta     tp
+.
+         comp    k6000
+         jlt     again
+         rsub
+.
+table    resw    2000
+tp       resw    1
+tmp      resw    1
+seed     resw    1
+tb1      byte    C'Good'
+tb2      byte    X'00FF'
+tb3      byte    X'1E'
+.
+k6000    word    6000
+k73      word    73
+k511     word    511
+k129     word    129
+zero     word    0
+three    word    3
+         end     try

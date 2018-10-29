@@ -1,0 +1,55 @@
+                        INSTALLING THE SIC BOOTSTRAP 
+ 
+ 
+    The only installation required is to place the object code for the 
+    bootstrap (from file SICBOOT.OBJ) in file DEV00 for use by the 
+    SIC simulator. The source code for the bootstrap is included in 
+    case you wish to modify the bootstrap.
+ 
+    To modify the bootstrap, make the desired changes and assemble the 
+    source code. The resulting object program must then be edited so
+    that it is in the proper form to be loaded by the S(TART command of 
+    the SIC simulator. To do this, first remove the Header and End 
+    records, and the first 9 characters of each Text record (the 'T',
+    starting address, and length). The remaining object code must then 
+    be packed into four records. Each such record should contain exactly
+    64 characters (representing 32 bytes of object code), with no headers
+    or other control information. If the object code for the bootstrap
+    does not completely fill the four 64-character records, it must be 
+    padded with 0's.
+ 
+    In making modifications to the bootstrap, note that the object code 
+    for the bootstrap can be no more than 128 bytes long. Notice also 
+    that this object code must occupy contiguous memory locations, beginning 
+    at address 0. Thus, any statements which do not generate object code 
+    (such as RESB and RESW) must appear at the end of the bootstrap.
+ 
+ 
+ ---------------------------------------------------------------------------- 
+ 
+ 
+                    HOW TO USE THE SIC BOOTSTRAP 
+ 
+ 
+    The bootstrap reads object code from file DEVF1 and enters it into
+    memory starting at address 80 (hexadecimal). After all of the code from 
+    DEVF1 has been loaded, the bootstrap executes a jump to address 80
+    to begin the execution of the program just loaded. (Normally, this
+    program will be the SIC loader.) 
+ 
+    Each byte of object code is represented on file DEVF1 as two hexadecimal 
+    digits (just as it is in a Text record of a SIC object program). 
+    However, there is no header or other control information (addresses,
+    lengths, etc.). The object code from DEVF1 is always loaded into
+    consecutive bytes of memory, beginning at address 80.
+ 
+    The file DEVF1 should contain only characters that represent valid
+    hexadecimal digits (0-9 or A-F). However, the object code may be 
+    divided into two or more lines for convenience in creation and 
+    editing.
+ 
+    To use the SIC bootstrap, place the object code for the bootstrap in
+    file DEV00 and the object code for the program to be loaded (in the
+    format described above) in file DEVF1. (Normally, this will be the
+    code for the SIC loader, which is already supplied in the proper
+    format.) Then run the SIC simulator and execute the S(tart command. 

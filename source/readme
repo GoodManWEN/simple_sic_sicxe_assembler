@@ -1,0 +1,41 @@
+    This archive contains software to accompany the text "System Software: An
+    Introduction to Systems Programming".  There is a SIC simulator and a 
+    simple assembler, loader, and bootstrap for SIC. This software is written
+    in standard Pascal, and should run with (at most) very minor changes on 
+    almost any machine with a Pascal compiler.
+ 
+    The following files are included: 
+ 
+      SICSIM.PAS  SIC simulator source program (Pascal)
+      SICSIM.DOC  Instructions for installing and using the SIC simulator 
+ 
+      SICASM.PAS  SIC assembler source program (Pascal)
+      SICASM.DOC  Instructions for installing and using the SIC assembler 
+ 
+      SICLDR.ASM  SIC loader source program (SIC assembler language)
+      SICLDR.OBJ  SIC loader object code
+      SICLDR.DOC  Instructions for installing and using the SIC loader 
+ 
+      SICBOOT.ASM SIC bootstrap source program (SIC assembler language)
+      SICBOOT.OBJ SIC bootstrap object code
+      SICBOOT.DOC Instructions for installing and using the SIC bootstrap 
+ 
+      SICTEST.DOC Description of SIC software test run 
+      SICTEST.ASM Source program for SIC software test run
+      SICTEST.OBJ Object program for SIC software test run
+      SICTEST.DAT Input data for SIC software test run
+ 
+ 
+    You should begin by listing and reading the appropriate documentation 
+    files (SICSIM.DOC, SICASM.DOC, SICLDR.DOC, SICBOOT.DOC, SICTEST.DOC). 
+    These files contain further instructions for the installation and use 
+    of the software.
+ 
+    Please report any problems with this software to 
+ 
+            Leland L. Beck 
+            Department of Mathematical and Computer Sciences 
+            San Diego State University
+            San Diego, CA 92182 
+            (619) 594-6807 
+            Internet: beck@cs.sdsu.edu 
